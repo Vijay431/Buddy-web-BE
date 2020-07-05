@@ -1,14 +1,21 @@
-import express, {Request, Response, NextFunction} from "express";
-import mongoose from "mongoose";
+import express, {Request, Response, NextFunction} from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import cors from 'cors';
 
-import environment from "./config/environment";
+import environment from './config/environment';
+
+import { AuthRoute } from './components/router/auth.route';
 
 class App{
     public app: express.Application;
+    public auth: AuthRoute = new AuthRoute();
 
     constructor(){
         this.app = express();
         this.dbConnection();
+        this.config();
+        this.auth.routes(this.app);
     }
 
     dbConnection(){
@@ -20,6 +27,12 @@ class App{
         .catch((err:any) => {
             throw err
         })
+    }
+
+    config(){
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({extended: false}));
+        this.app.use(cors());
     }
 
 }
