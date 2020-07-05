@@ -2,10 +2,10 @@
   "name": "buddy-be",
   "version": "1.0.0",
   "description": "Backend frame work for Buddy chat app",
-  "main": "app.ts",
+  "main": "./src/app.ts",
   "scripts": {
-    "dev": "ts-node-dev ./src/server.ts",
-    "start": "ts-node ./dist/server.js",
+    "dev": "ts-node-dev ./src/config/server.ts",
+    "start": "ts-node ./dist/config/server.js",
     "build": "tsc"
   },
   "repository": {
