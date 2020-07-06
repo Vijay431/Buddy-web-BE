@@ -2,9 +2,10 @@ import {Request, Response, NextFunction} from 'express';
 import nodemailer from 'nodemailer';
 import mongoose from 'mongoose';
 
+import environment from '../../config/environment';
 import { AuthSchema } from '../models/auth.model';
 
-const Auth = mongoose.model('users', AuthSchema)
+const Auth = mongoose.model('users', AuthSchema);
 
 export class AuthController{
     //Login Controller
@@ -21,11 +22,11 @@ export class AuthController{
 
     //Send OTP
     public sendOTP(req: Request, res: Response, next: NextFunction){
-        const { phone, otp } = req.body;
-        Auth.find({phone: phone})
+        Auth.find({phone: req.query.phone})
         .then((users:any) => {
             if(users.length != 0){
                 let email = users[0].email; 
+                let otp = environment.OTP;
                 let transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
@@ -37,20 +38,22 @@ export class AuthController{
                     from: 'buddywebchat@gmail.com',
                     to: email,
                     subject: 'OTP Generated',
-                    text: `The generated OTP is ${otp}!`
+                    text: `The generated OTP is ${otp}`
                 };
-                transporter.sendMail(mailOptions, function(error, info){
-                    if (error) {throw error}
-                    res.status(200).json({message: 'success', info: info})
-                    }
-                );
+                transporter.sendMail(mailOptions)
+                .then((info:any) => {
+                    return res.status(200).json({message: 'success'});
+                })
+                .catch((err:any) => {
+                    return res.status(400).json({error: 'Mail service is temporarily unavailable'});
+                })
             }
             else{
-                res.status(200).json({message: 'failure'});
+                return res.status(200).json({message: 'failure'});
             }
         })
         .catch((err:any) => {
-            res.status(500).json({error: 'Uh-Oh! Something went Wrong!'});
+            return res.status(500).json({error: 'Uh-Oh! Something went Wrong!'});
         })
     }
 

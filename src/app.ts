@@ -5,16 +5,19 @@ import cors from 'cors';
 
 import environment from './config/environment';
 
+import { OTPGenerator } from './config/otpGenerator';
 import { AuthRoute } from './components/router/auth.route';
 
 class App{
     public app: express.Application;
+    public otp: OTPGenerator = new OTPGenerator();
     public auth: AuthRoute = new AuthRoute();
 
     constructor(){
         this.app = express();
         this.dbConnection();
         this.config();
+        this.otp;
         this.auth.routes(this.app);
     }
 
