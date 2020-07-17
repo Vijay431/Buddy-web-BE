@@ -8,7 +8,7 @@ export class AuthRoute{
         .get(this.authController.login)
 
         app.route('/auth/sendOTP')
-        .get(this.authController.sendOTP)
+        .post(this.authController.sendOTP)
 
         app.route('/auth/validateOTP')
         .get(this.authController.validateOTP)
