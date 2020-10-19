@@ -1,9 +1,6 @@
 import environment from './environment';
 
 export class OTPGenerator{
-    constructor(){
-        this.otpGenerator();
-    }
 
     public otpGenerator(){
         let pattern = environment.PATTERN;
@@ -16,6 +13,7 @@ export class OTPGenerator{
 
         console.log(otp);
         environment.OTP = otp;
+        return otp;
     }
 
 

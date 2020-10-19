@@ -4,10 +4,12 @@ import mongoose from 'mongoose';
 
 import environment from '../../config/environment';
 import { AuthSchema } from '../models/auth.model';
+import { OTPGenerator } from '../../config/otpGenerator';
 
 const Auth = mongoose.model('users', AuthSchema);
 
 export class AuthController{
+    public otpgen: OTPGenerator = new OTPGenerator();
 
     //Login Controller
     public login(req: Request, res: Response, next: NextFunction){
@@ -21,24 +23,11 @@ export class AuthController{
         })
     }
 
-    //OTP Generator
-    public otpGenerator(){
-        let pattern = environment.PATTERN;
-        let digits = environment.DIGITS;
-        let otp = "";
-
-        for(let i=0; i<Number(digits); i++){
-            otp += pattern[Math.floor(Math.random() * 10)];
-        }
-        console.log(">>>>" + otp);
-        return otp;
-    }
-
     //Send OTP
     public sendOTP(req: Request, res: Response, next: NextFunction){
         let email = req.body.email;
         let otp = '123456';
-        console.log(this.otpGenerator());
+        console.log(this.otpgen.otpGenerator);
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
